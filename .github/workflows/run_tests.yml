@@ -119,11 +119,9 @@ jobs:
           path: plugins
           fetch-depth: 1
 
-      - name: Create database
-        if: env.BUILD_TYPE != 'LINT'
+      - name: Migrate database
         run: |
-          bin/rake db:create
-          bin/rake db:migrate
+          LOAD_PLUGINS=1 bin/rake db:migrate
 
       - name: Plugin RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'
