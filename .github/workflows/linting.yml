@@ -39,4 +39,6 @@ jobs:
           "assets/stylesheets/**/*.scss" \
           "assets/javascripts/**/*.{js,es6}"
       
+    - name: Rubocop
+      run: bundle exec rubocop .
     
