@@ -120,8 +120,8 @@ jobs:
 
       - name: Migrate database
         run: |
-          bundle exec rake db:create
-          LOAD_PLUGINS=1 bundle exec rake db:migrate
+          bin/rake db:create
+          bin/rake db:migrate
 
       - name: Plugin RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'
