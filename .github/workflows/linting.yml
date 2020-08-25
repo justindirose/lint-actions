@@ -42,3 +42,14 @@ jobs:
     - name: Rubocop
       run: bundle exec rubocop .
     
+    - name: Autofix Failures
+      if: ${{ failure() }}
+      uses: samuelmeuli/lint-action@v1
+      with:
+        github_token: ${{ secrets.github_token }}
+        rubocop: true
+        rubocop_command_prefix: 'bundle exec'
+        eslint: true
+        prettier: true
+        auto_fix: true
+        git_email: 'ci@discourse'
