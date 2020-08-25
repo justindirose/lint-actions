@@ -1,4 +1,4 @@
-name: CI
+name: Plugin Tests
 
 on:
   push:
@@ -28,8 +28,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_types: ["BACKEND", "FRONTEND", "LINT"]
-        target: ["PLUGINS", "CORE"]
+        build_types: ["BACKEND", "FRONTEND"]
+        target: ["PLUGINS"]
         os: [ubuntu-latest]
         ruby: ["2.6"]
         postgres: ["12"]
@@ -56,22 +56,14 @@ jobs:
         with:
           repository: discourse/discourse
           fetch-depth: 1
-      - uses: actions/checkout@master
-        with:
-          path: plugins
 
       - name: Setup Git
         run: |
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Setup packages
-        run: |
-          sudo apt-get update
-          sudo apt-get -yqq install postgresql-client libpq-dev gifsicle jpegoptim optipng jhead
-          wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
-
       - name: Update imagemagick
+        if: env.BUILD_TYPE == 'BACKEND'
         run: |
           wget https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-imagemagick
           chmod +x install-imagemagick
@@ -120,29 +112,24 @@ jobs:
 
       - name: Yarn install
         run: yarn install --dev
+      
+      - name: Install plugin
+        uses: actions/checkout@master
+        with:
+          path: plugins
+          fetch-depth: 1
 
       - name: Create database
+        if: env.BUILD_TYPE != 'LINT'
         run: |
           bin/rake db:create
           bin/rake db:migrate
 
-      - name: Create parallel databases
-        run: |
-          bin/rake parallel:create
-          bin/rake parallel:migrate
-
-      - name: Core RSpec
-        run: |
-          bin/turbo_rspec
-          bin/rake plugin:spec
-
       - name: Plugin RSpec
+        if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'
         run: bin/rake plugin:spec
 
-      - name: Core QUnit
-        run: bundle exec rake qunit:test['1200000']
-        timeout-minutes: 30
-
-      - name: Plugin QUnit
+      - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
+        if: env.BUILD_TYPE == 'FRONTEND'
         run: bundle exec rake plugin:qunit['*','1200000']
         timeout-minutes: 30
