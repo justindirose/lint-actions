@@ -18,7 +18,7 @@ jobs:
       run: yarn install --dev
     
     - name: ESLint
-      run: yarn eslint --ext .es6 assets/javascripts
+      run: yarn eslint --ext .js --ext .es6 assets/javascripts
     
     - name: Prettier
       run: |
