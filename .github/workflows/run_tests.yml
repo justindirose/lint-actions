@@ -117,7 +117,6 @@ jobs:
         run: |
           bin/rake db:create
           LOAD_PLUGINS=1 bin/rake db:migrate
-          LOAD_PLUGINS=1 bin/rake 
 
       - name: Plugin RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'
