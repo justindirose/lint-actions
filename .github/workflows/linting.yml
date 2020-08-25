@@ -13,6 +13,18 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12
+
+    - name: Set up ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+        architecture: 'x64'
+
+    - name: Setup bundler
+      run: gem install bundler -v 2.1.4 --no-doc
+
+    - name: Setup gems
+      run: bundle install --jobs 4
     
     - name: Yarn install
       run: yarn install --dev
