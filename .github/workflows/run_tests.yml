@@ -37,7 +37,6 @@ jobs:
         env:
           POSTGRES_USER: discourse
           POSTGRES_PASSWORD: discourse
-          POSTGRES_DB: discourse_test
         options: >-
           --mount type=tmpfs,destination=/var/lib/postgresql/data
           --health-cmd pg_isready
