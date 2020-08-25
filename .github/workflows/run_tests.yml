@@ -1,12 +1,6 @@
 name: Plugin Tests
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches-ignore:
-      - "tests-passed"
+on: [push, pull_request]
 
 jobs:
   build:
@@ -121,7 +115,9 @@ jobs:
 
       - name: Migrate database
         run: |
+          bin/rake db:create
           LOAD_PLUGINS=1 bin/rake db:migrate
+          LOAD_PLUGINS=1 bin/rake 
 
       - name: Plugin RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'
