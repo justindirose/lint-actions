@@ -120,7 +120,8 @@ jobs:
 
       - name: Migrate database
         run: |
-          bin/rake db:create
+          RAILS_ENV=development bin/rake db:create
+          RAILS_ENV=development bin/rake db:migrate
           bin/rake db:migrate
 
       - name: Plugin RSpec
