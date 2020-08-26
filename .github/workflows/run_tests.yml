@@ -49,6 +49,12 @@ jobs:
         with:
           repository: discourse/discourse
           fetch-depth: 1
+          
+      - name: Install plugin
+        uses: actions/checkout@master
+        with:
+          path: plugins/${{ github.event.repository.name }}
+          fetch-depth: 1 
 
       - name: Setup Git
         run: |
@@ -111,17 +117,10 @@ jobs:
 
       - name: Yarn install
         run: yarn install --dev
-      
-      - name: Install plugin
-        uses: actions/checkout@master
-        with:
-          path: plugins
-          fetch-depth: 1
 
       - name: Migrate database
         run: |
-          RAILS_ENV=development bin/rake db:create
-          RAILS_ENV=development bin/rake db:migrate
+          bin/rake db:create
           bin/rake db:migrate
 
       - name: Plugin RSpec
