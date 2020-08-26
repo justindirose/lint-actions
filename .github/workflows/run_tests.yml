@@ -125,9 +125,9 @@ jobs:
 
       - name: Plugin RSpec
         if: env.BUILD_TYPE == 'BACKEND' && env.TARGET == 'PLUGINS'
-        run: bin/rake plugin:spec
+        run: bin/rake plugin:spec[${{ github.event.repository.name }}]
 
       - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
         if: env.BUILD_TYPE == 'FRONTEND'
-        run: bundle exec rake plugin:qunit['*','1200000']
+        run: bundle exec rake plugin:qunit['${{ github.event.repository.name }}','1200000']
         timeout-minutes: 30
